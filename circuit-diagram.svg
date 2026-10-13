@@ -1,0 +1,272 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1050" viewBox="0 0 1280 1050" font-family="Segoe UI, Arial, sans-serif">
+  <rect x="0" y="0" width="1280" height="1050" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="640" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#111">PIC16F72 Arduino HV-ICSP programmer — VPP switch and wiring</text>
+  <text x="640" y="56" text-anchor="middle" font-size="13" fill="#444">D9 HIGH = VPP ON (~13V on MCLR)  ·  D9 LOW = VPP OFF  ·  sketch pic16f72_icsp.ino (v2, two-transistor VPP switch)</text>
+
+  <!-- ================= BOOST CONVERTER ================= -->
+  <rect x="100" y="80" width="400" height="90" rx="6" fill="#fffbe6" stroke="#333" stroke-width="1.5"/>
+  <text x="300" y="112" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Boost converter (your module)</text>
+  <text x="300" y="133" text-anchor="middle" font-size="11" fill="#a33" font-weight="bold">SET OUTPUT TO 13.2V — VERIFY WITH A METER</text>
+  <text x="300" y="151" text-anchor="middle" font-size="11" fill="#a33">BEFORE CONNECTING ANYTHING TO THE PIC</text>
+
+  <!-- IN+ with 5V flag -->
+  <line x1="40" y1="110" x2="40" y2="95" stroke="#c64000" stroke-width="2"/>
+  <polygon points="34,95 46,95 40,85" fill="#c64000"/>
+  <text x="40" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#c64000">5V</text>
+  <circle cx="40" cy="110" r="3.5" fill="#111"/>
+  <line x1="40" y1="110" x2="100" y2="110" stroke="#c64000" stroke-width="2"/>
+  <text x="108" y="114" font-size="11" fill="#333">IN+</text>
+
+  <!-- IN- GND -->
+  <line x1="100" y1="145" x2="60" y2="145" stroke="#111" stroke-width="2"/>
+  <line x1="60" y1="145" x2="60" y2="153" stroke="#111" stroke-width="2"/>
+  <line x1="51" y1="153" x2="69" y2="153" stroke="#111" stroke-width="2"/>
+  <line x1="54.5" y1="157" x2="65.5" y2="157" stroke="#111" stroke-width="2"/>
+  <line x1="58" y1="161" x2="62" y2="161" stroke="#111" stroke-width="2"/>
+  <text x="108" y="149" font-size="11" fill="#333">IN&#8722;</text>
+
+  <!-- OUT+ 13V flag -->
+  <line x1="500" y1="110" x2="560" y2="110" stroke="#c00" stroke-width="2"/>
+  <line x1="560" y1="110" x2="560" y2="95" stroke="#c00" stroke-width="2"/>
+  <polygon points="554,95 566,95 560,85" fill="#c00"/>
+  <text x="560" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#c00">13V</text>
+  <text x="492" y="114" text-anchor="end" font-size="11" fill="#333">OUT+</text>
+
+  <!-- OUT- GND -->
+  <line x1="500" y1="145" x2="540" y2="145" stroke="#111" stroke-width="2"/>
+  <line x1="540" y1="145" x2="540" y2="153" stroke="#111" stroke-width="2"/>
+  <line x1="531" y1="153" x2="549" y2="153" stroke="#111" stroke-width="2"/>
+  <line x1="534.5" y1="157" x2="545.5" y2="157" stroke="#111" stroke-width="2"/>
+  <line x1="538" y1="161" x2="542" y2="161" stroke="#111" stroke-width="2"/>
+  <text x="492" y="149" text-anchor="end" font-size="11" fill="#333">OUT&#8722;</text>
+
+  <!-- ================= ARDUINO ================= -->
+  <rect x="100" y="300" width="180" height="440" rx="6" fill="#e6f2f2" stroke="#333" stroke-width="1.5"/>
+  <text x="190" y="340" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Arduino</text>
+  <text x="190" y="360" text-anchor="middle" font-size="12" fill="#333">UNO / Nano</text>
+
+  <text x="270" y="384" text-anchor="end" font-size="12" font-weight="bold" fill="#111">D9</text>
+  <text x="270" y="474" text-anchor="end" font-size="12" font-weight="bold" fill="#c64000">5V</text>
+  <text x="270" y="534" text-anchor="end" font-size="12" font-weight="bold" fill="#111">GND</text>
+  <text x="270" y="624" text-anchor="end" font-size="12" font-weight="bold" fill="#111">D10</text>
+  <text x="270" y="684" text-anchor="end" font-size="12" font-weight="bold" fill="#111">D11</text>
+
+  <!-- 5V flag -->
+  <line x1="280" y1="470" x2="324" y2="470" stroke="#c64000" stroke-width="2"/>
+  <line x1="324" y1="470" x2="324" y2="455" stroke="#c64000" stroke-width="2"/>
+  <polygon points="318,455 330,455 324,445" fill="#c64000"/>
+  <text x="324" y="440" text-anchor="middle" font-size="13" font-weight="bold" fill="#c64000">5V</text>
+
+  <!-- GND symbol -->
+  <line x1="280" y1="530" x2="330" y2="530" stroke="#111" stroke-width="2"/>
+  <line x1="330" y1="530" x2="330" y2="538" stroke="#111" stroke-width="2"/>
+  <line x1="321" y1="538" x2="339" y2="538" stroke="#111" stroke-width="2"/>
+  <line x1="324.5" y1="542" x2="335.5" y2="542" stroke="#111" stroke-width="2"/>
+  <line x1="328" y1="546" x2="332" y2="546" stroke="#111" stroke-width="2"/>
+
+  <!-- D9 wire + R1 + Q1 base -->
+  <line x1="280" y1="380" x2="320" y2="380" stroke="#111" stroke-width="2"/>
+  <rect x="320" y="372" width="80" height="16" fill="#fff" stroke="#111" stroke-width="2"/>
+  <line x1="400" y1="380" x2="450" y2="380" stroke="#111" stroke-width="2"/>
+  <text x="360" y="364" text-anchor="middle" font-size="12" fill="#111">R1 1k</text>
+
+  <!-- R2: Q1 base to GND -->
+  <circle cx="420" cy="380" r="3.5" fill="#111"/>
+  <line x1="420" y1="380" x2="420" y2="410" stroke="#111" stroke-width="2"/>
+  <rect x="412" y="410" width="16" height="50" fill="#fff" stroke="#111" stroke-width="2"/>
+  <line x1="420" y1="460" x2="420" y2="480" stroke="#111" stroke-width="2"/>
+  <line x1="420" y1="480" x2="420" y2="488" stroke="#111" stroke-width="2"/>
+  <line x1="411" y1="488" x2="429" y2="488" stroke="#111" stroke-width="2"/>
+  <line x1="414.5" y1="492" x2="425.5" y2="492" stroke="#111" stroke-width="2"/>
+  <line x1="418" y1="496" x2="422" y2="496" stroke="#111" stroke-width="2"/>
+  <text x="438" y="438" font-size="12" fill="#111">R2 10k</text>
+
+  <!-- Q1 NPN -->
+  <line x1="450" y1="360" x2="450" y2="400" stroke="#111" stroke-width="3.5"/>
+  <line x1="450" y1="370" x2="490" y2="340" stroke="#111" stroke-width="2"/>
+  <line x1="450" y1="390" x2="490" y2="420" stroke="#111" stroke-width="2"/>
+  <polygon points="486,417 481,407 475,415" fill="#111"/>
+  <line x1="490" y1="420" x2="490" y2="448" stroke="#111" stroke-width="2"/>
+  <line x1="490" y1="448" x2="490" y2="456" stroke="#111" stroke-width="2"/>
+  <line x1="481" y1="456" x2="499" y2="456" stroke="#111" stroke-width="2"/>
+  <line x1="484.5" y1="460" x2="495.5" y2="460" stroke="#111" stroke-width="2"/>
+  <line x1="488" y1="464" x2="492" y2="464" stroke="#111" stroke-width="2"/>
+  <text x="436" y="372" text-anchor="end" font-size="9" fill="#555">B</text>
+  <text x="496" y="338" font-size="9" fill="#555">C</text>
+  <text x="496" y="432" font-size="9" fill="#555">E</text>
+  <text x="505" y="380" font-size="13" font-weight="bold" fill="#111">Q1</text>
+  <text x="505" y="398" font-size="11" fill="#111">BC547 or 2N2222 (NPN)</text>
+
+  <!-- Q1 collector up to R3 -->
+  <line x1="490" y1="340" x2="490" y2="300" stroke="#111" stroke-width="2"/>
+  <line x1="490" y1="300" x2="510" y2="300" stroke="#111" stroke-width="2"/>
+  <rect x="510" y="292" width="130" height="16" fill="#fff" stroke="#111" stroke-width="2"/>
+  <line x1="640" y1="300" x2="700" y2="300" stroke="#111" stroke-width="2"/>
+  <text x="575" y="284" text-anchor="middle" font-size="12" fill="#111">R3 4.7k</text>
+
+  <!-- R4: Q2 base to emitter (13V) -->
+  <circle cx="665" cy="300" r="3.5" fill="#111"/>
+  <line x1="665" y1="300" x2="665" y2="250" stroke="#111" stroke-width="2"/>
+  <rect x="657" y="200" width="16" height="50" fill="#fff" stroke="#111" stroke-width="2"/>
+  <line x1="665" y1="200" x2="665" y2="180" stroke="#111" stroke-width="2"/>
+  <line x1="665" y1="180" x2="740" y2="180" stroke="#c00" stroke-width="2"/>
+  <text x="648" y="228" text-anchor="end" font-size="12" fill="#111">R4 10k</text>
+
+  <!-- Q2 PNP -->
+  <line x1="700" y1="280" x2="700" y2="320" stroke="#111" stroke-width="3.5"/>
+  <line x1="700" y1="290" x2="740" y2="260" stroke="#111" stroke-width="2"/>
+  <polygon points="708,284 720,281 715,273" fill="#111"/>
+  <line x1="700" y1="310" x2="740" y2="350" stroke="#111" stroke-width="2"/>
+  <text x="688" y="292" text-anchor="end" font-size="9" fill="#555">B</text>
+  <text x="746" y="258" font-size="9" fill="#555">E</text>
+  <text x="746" y="366" font-size="9" fill="#555">C</text>
+  <text x="760" y="292" font-size="13" font-weight="bold" fill="#111">Q2</text>
+  <text x="760" y="310" font-size="11" fill="#111">BC557 or 2N3906 (PNP)</text>
+
+  <!-- Q2 emitter to 13V flag -->
+  <line x1="740" y1="260" x2="740" y2="160" stroke="#c00" stroke-width="2"/>
+  <circle cx="740" cy="180" r="3.5" fill="#111"/>
+  <line x1="740" y1="160" x2="740" y2="145" stroke="#c00" stroke-width="2"/>
+  <polygon points="734,145 746,145 740,135" fill="#c00"/>
+  <text x="740" y="130" text-anchor="middle" font-size="13" font-weight="bold" fill="#c00">13V</text>
+
+  <!-- Q2 collector -> R5 -> MCLR node -->
+  <line x1="740" y1="350" x2="740" y2="390" stroke="#c00" stroke-width="2"/>
+  <rect x="732" y="390" width="16" height="50" fill="#fff" stroke="#111" stroke-width="2"/>
+  <line x1="740" y1="440" x2="740" y2="470" stroke="#c00" stroke-width="2"/>
+  <text x="756" y="420" font-size="12" fill="#111">R5 100R</text>
+
+  <!-- MCLR node -> R6 to GND, -> connector -->
+  <circle cx="740" cy="470" r="3.5" fill="#111"/>
+  <line x1="740" y1="470" x2="740" y2="490" stroke="#111" stroke-width="2"/>
+  <rect x="732" y="490" width="16" height="50" fill="#fff" stroke="#111" stroke-width="2"/>
+  <line x1="740" y1="540" x2="740" y2="560" stroke="#111" stroke-width="2"/>
+  <line x1="740" y1="560" x2="740" y2="568" stroke="#111" stroke-width="2"/>
+  <line x1="731" y1="568" x2="749" y2="568" stroke="#111" stroke-width="2"/>
+  <line x1="734.5" y1="572" x2="745.5" y2="572" stroke="#111" stroke-width="2"/>
+  <line x1="738" y1="576" x2="742" y2="576" stroke="#111" stroke-width="2"/>
+  <text x="756" y="520" font-size="12" fill="#111">R6 10k</text>
+
+  <line x1="740" y1="470" x2="880" y2="470" stroke="#c00" stroke-width="2"/>
+  <text x="770" y="462" font-size="11" font-weight="bold" fill="#c00">VPP &#8594; MCLR</text>
+
+  <!-- ================= PGD / PGC wires ================= -->
+  <line x1="280" y1="620" x2="880" y2="620" stroke="#111" stroke-width="2"/>
+  <text x="560" y="610" text-anchor="middle" font-size="11" fill="#111">PGD</text>
+  <line x1="280" y1="680" x2="880" y2="680" stroke="#111" stroke-width="2"/>
+  <text x="560" y="670" text-anchor="middle" font-size="11" fill="#111">PGC</text>
+
+  <!-- ================= ICSP TARGET CONNECTOR ================= -->
+  <rect x="880" y="380" width="220" height="340" rx="6" fill="#fcebe7" stroke="#333" stroke-width="1.5"/>
+  <text x="990" y="410" text-anchor="middle" font-size="15" font-weight="bold" fill="#111">To PIC16F72</text>
+  <text x="990" y="430" text-anchor="middle" font-size="12" fill="#333">ICSP harness</text>
+
+  <text x="874" y="474" text-anchor="end" font-size="10" font-weight="bold" fill="#111">1</text>
+  <text x="894" y="474" font-size="12" fill="#111">VPP &#8594; pin 1 (MCLR/VPP)</text>
+
+  <text x="874" y="524" text-anchor="end" font-size="10" font-weight="bold" fill="#111">2</text>
+  <line x1="824" y1="520" x2="880" y2="520" stroke="#c64000" stroke-width="2"/>
+  <line x1="824" y1="520" x2="824" y2="505" stroke="#c64000" stroke-width="2"/>
+  <polygon points="818,505 830,505 824,495" fill="#c64000"/>
+  <text x="824" y="490" text-anchor="middle" font-size="13" font-weight="bold" fill="#c64000">5V</text>
+  <text x="894" y="524" font-size="12" fill="#111">VDD &#8594; pin 20</text>
+
+  <text x="874" y="574" text-anchor="end" font-size="10" font-weight="bold" fill="#111">3</text>
+  <line x1="830" y1="570" x2="880" y2="570" stroke="#111" stroke-width="2"/>
+  <line x1="830" y1="570" x2="830" y2="578" stroke="#111" stroke-width="2"/>
+  <line x1="821" y1="578" x2="839" y2="578" stroke="#111" stroke-width="2"/>
+  <line x1="824.5" y1="582" x2="835.5" y2="582" stroke="#111" stroke-width="2"/>
+  <line x1="828" y1="586" x2="832" y2="586" stroke="#111" stroke-width="2"/>
+  <text x="894" y="574" font-size="12" fill="#111">GND &#8594; pins 8 and 19</text>
+
+  <text x="874" y="624" text-anchor="end" font-size="10" font-weight="bold" fill="#111">4</text>
+  <text x="894" y="624" font-size="12" fill="#111">PGD &#8594; pin 28 (RB7)</text>
+
+  <text x="874" y="684" text-anchor="end" font-size="10" font-weight="bold" fill="#111">5</text>
+  <text x="894" y="684" font-size="12" fill="#111">PGC &#8594; pin 27 (RB6)</text>
+
+  <!-- ================= PIC16F72 PIN MAP ================= -->
+  <rect x="100" y="770" width="380" height="245" rx="6" fill="#f0f0f0" stroke="#333" stroke-width="1.5"/>
+  <text x="290" y="795" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">PIC16F72 (PDIP-28) — notch / pin 1 at top</text>
+
+  <rect x="250" y="815" width="160" height="150" fill="#fff" stroke="#111" stroke-width="2"/>
+  <path d="M 322 815 A 8 8 0 0 1 338 815" fill="none" stroke="#111" stroke-width="2"/>
+  <circle cx="258" cy="825" r="2" fill="#333"/>
+
+  <!-- Left pins 1-14 -->
+  <line x1="238" y1="825" x2="250" y2="825" stroke="#c00" stroke-width="2.5"/>
+  <text x="234" y="828" text-anchor="end" font-size="8" font-weight="bold" fill="#c00">1</text>
+  <line x1="238" y1="835" x2="250" y2="835" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="838" text-anchor="end" font-size="8" fill="#666">2</text>
+  <line x1="238" y1="845" x2="250" y2="845" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="848" text-anchor="end" font-size="8" fill="#666">3</text>
+  <line x1="238" y1="855" x2="250" y2="855" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="858" text-anchor="end" font-size="8" fill="#666">4</text>
+  <line x1="238" y1="865" x2="250" y2="865" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="868" text-anchor="end" font-size="8" fill="#666">5</text>
+  <line x1="238" y1="875" x2="250" y2="875" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="878" text-anchor="end" font-size="8" fill="#666">6</text>
+  <line x1="238" y1="885" x2="250" y2="885" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="888" text-anchor="end" font-size="8" fill="#666">7</text>
+  <line x1="238" y1="895" x2="250" y2="895" stroke="#c00" stroke-width="2.5"/>
+  <text x="234" y="898" text-anchor="end" font-size="8" font-weight="bold" fill="#c00">8</text>
+  <line x1="238" y1="905" x2="250" y2="905" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="908" text-anchor="end" font-size="8" fill="#666">9</text>
+  <line x1="238" y1="915" x2="250" y2="915" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="918" text-anchor="end" font-size="8" fill="#666">10</text>
+  <line x1="238" y1="925" x2="250" y2="925" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="928" text-anchor="end" font-size="8" fill="#666">11</text>
+  <line x1="238" y1="935" x2="250" y2="935" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="938" text-anchor="end" font-size="8" fill="#666">12</text>
+  <line x1="238" y1="945" x2="250" y2="945" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="948" text-anchor="end" font-size="8" fill="#666">13</text>
+  <line x1="238" y1="955" x2="250" y2="955" stroke="#999" stroke-width="1.5"/>
+  <text x="234" y="958" text-anchor="end" font-size="8" fill="#666">14</text>
+
+  <!-- Right pins 28-15 -->
+  <line x1="410" y1="825" x2="422" y2="825" stroke="#c00" stroke-width="2.5"/>
+  <text x="426" y="828" font-size="8" font-weight="bold" fill="#c00">28</text>
+  <line x1="410" y1="835" x2="422" y2="835" stroke="#c00" stroke-width="2.5"/>
+  <text x="426" y="838" font-size="8" font-weight="bold" fill="#c00">27</text>
+  <line x1="410" y1="845" x2="422" y2="845" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="848" font-size="8" fill="#666">26</text>
+  <line x1="410" y1="855" x2="422" y2="855" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="858" font-size="8" fill="#666">25</text>
+  <line x1="410" y1="865" x2="422" y2="865" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="868" font-size="8" fill="#666">24</text>
+  <line x1="410" y1="875" x2="422" y2="875" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="878" font-size="8" fill="#666">23</text>
+  <line x1="410" y1="885" x2="422" y2="885" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="888" font-size="8" fill="#666">22</text>
+  <line x1="410" y1="895" x2="422" y2="895" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="898" font-size="8" fill="#666">21</text>
+  <line x1="410" y1="905" x2="422" y2="905" stroke="#c00" stroke-width="2.5"/>
+  <text x="426" y="908" font-size="8" font-weight="bold" fill="#c00">20</text>
+  <line x1="410" y1="915" x2="422" y2="915" stroke="#c00" stroke-width="2.5"/>
+  <text x="426" y="918" font-size="8" font-weight="bold" fill="#c00">19</text>
+  <line x1="410" y1="925" x2="422" y2="925" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="928" font-size="8" fill="#666">18</text>
+  <line x1="410" y1="935" x2="422" y2="935" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="938" font-size="8" fill="#666">17</text>
+  <line x1="410" y1="945" x2="422" y2="945" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="948" font-size="8" fill="#666">16</text>
+  <line x1="410" y1="955" x2="422" y2="955" stroke="#999" stroke-width="1.5"/>
+  <text x="426" y="958" font-size="8" fill="#666">15</text>
+
+  <text x="290" y="990" text-anchor="middle" font-size="11" fill="#111">ICSP pins: 1 = MCLR/VPP  ·  28 = RB7/PGD  ·  27 = RB6/PGC</text>
+  <text x="290" y="1006" text-anchor="middle" font-size="11" fill="#111">20 = VDD  ·  8, 19 = GND (VSS)</text>
+
+  <!-- ================= BUILD NOTES ================= -->
+  <rect x="520" y="770" width="700" height="245" rx="6" fill="#fbfbef" stroke="#333" stroke-width="1.5"/>
+  <text x="540" y="795" font-size="14" font-weight="bold" fill="#111">Build notes</text>
+  <text x="540" y="822" font-size="12" fill="#111">&#8226; Q1 = any small NPN (BC547 / 2N2222).  Q2 = either of your PNPs (BC557 or 2N3906).</text>
+  <text x="540" y="846" font-size="12" fill="#111">&#8226; Pinouts — flat face toward you, legs down:  BC557 = C-B-E   2N3906 = E-B-C   BC547 = C-B-E   2N2222 = E-B-C</text>
+  <text x="540" y="870" font-size="12" fill="#111">&#8226; Set the boost to 13.2V and verify with a meter BEFORE wiring MCLR. VPP at pin 1 must stay within 12.75&#8211;13.25V.</text>
+  <text x="540" y="894" font-size="12" fill="#111">&#8226; D9 HIGH = VPP on (~13V at MCLR)  ·  D9 LOW = VPP off. Onboard LED (D13) lights while VPP is on.</text>
+  <text x="540" y="918" font-size="12" fill="#111">&#8226; All grounds common: Arduino GND, boost IN&#8722;/OUT&#8722;, Q1 emitter, R2, R6, PIC pins 8 &amp; 19.</text>
+  <text x="540" y="942" font-size="12" fill="#111">&#8226; Program the bare chip (breadboard / socket). If it is in a circuit, isolate MCLR pull-ups and other VDD sources.</text>
+  <text x="540" y="966" font-size="12" fill="#111">&#8226; VDD at PIC pin 20 must measure 4.75&#8211;5.25V. If USB power sags, feed the Arduino 7&#8211;9V on VIN instead.</text>
+  <text x="540" y="990" font-size="12" fill="#111">&#8226; R5 = 100R current-limits VPP to ~130 mA (DS39588A note 1). R2 holds VPP off while the Arduino boots.</text>
+</svg>
