@@ -32,6 +32,7 @@ CODE_WORDS = CODE_END - CODE_START + 1
 # DS39588A Register 3-1: config bits 13-7 and 5 are unimplemented and read
 # back as '1', so only 0x005F is comparable (same mask as Table 4-1 CFWD).
 CONFIG_MASK = 0x005F
+HEX_CHARS = '0123456789abcdefABCDEF'
 
 
 class Programmer:
@@ -89,7 +90,7 @@ class Programmer:
         last = None
         for _ in range(3):
             line = self._send(f'G{count:04X}')
-            if len(line) == 4 * count and all(c in '0123456789abcdefABCDEF' for c in line):
+            if len(line) == 4 * count and all(c in HEX_CHARS for c in line):
                 return [int(line[i:i + 4], 16) for i in range(0, len(line), 4)]
             last = f"{len(line)} chars for {count} words"
             # A hiccup can truncate the stream with the Arduino's address
@@ -99,6 +100,21 @@ class Programmer:
             self.ser.reset_input_buffer()
             self._send('E')
         raise RuntimeError(f"Short block read: {last} (3 attempts)")
+
+    def read_at(self, addr, tries=3):
+        """Seek to addr and read that word `tries` times (R does not increment)."""
+        for attempt in range(3):
+            self._send('E')                       # PC = 0x0000
+            if not addr:
+                break
+            line = self._send(f'G{addr:04X}')     # stream-discard addr words
+            if len(line) == 4 * addr and all(c in HEX_CHARS for c in line):
+                break                             # PC = addr, stream in sync
+            if attempt == 2:
+                raise RuntimeError(f"read stream corrupted while seeking to {addr:#06x}")
+            time.sleep(2.0)                       # drain, then resync from PC=0
+            self.ser.reset_input_buffer()
+        return [self.read_word() for _ in range(tries)]
 
 
 def parse_hex(path):
@@ -151,7 +167,8 @@ def parse_hex(path):
 
 
 def check_device(p):
-    devid, rev, word = p.read_id()
+    ids = [p.read_id() for _ in range(3)]        # majority vote vs read glitches
+    devid, rev, word = max(set(ids), key=ids.count)
     if devid != DEVID_PIC16F72:
         raise RuntimeError(
             f"Device ID {devid} (raw word {word:#06x}) — expected {DEVID_PIC16F72} "
@@ -163,10 +180,20 @@ def check_device(p):
 def blank_check(p):
     p.enter()
     words = p.read_block(CODE_WORDS)
-    nonblank = [f"{a:04X}" for a, w in enumerate(words) if w != BLANK]
+    nonblank = [a for a, w in enumerate(words) if w != BLANK]
     if nonblank:
-        raise RuntimeError(f"Blank check failed at {', '.join(nonblank[:8])}"
-                           f"{' ...' if len(nonblank) > 8 else ''} — erase may have failed")
+        real = []
+        for a in nonblank:
+            reads = p.read_at(a)
+            if sum(v == BLANK for v in reads) >= 2:
+                continue          # corrupted in transit, not a real bad word
+            real.append(a)
+        if real:
+            shown = ', '.join(f"{a:04X}" for a in real[:8])
+            raise RuntimeError(f"Blank check failed at {shown}"
+                               f"{' ...' if len(real) > 8 else ''} — erase may have failed")
+        print(f"    note: {len(nonblank)} word(s) glitched during the blank-check "
+              "read but read back blank")
     print("Chip erased, blank check passed")
 
 
@@ -187,12 +214,22 @@ def do_dump(p, path):
     check_device(p)
     p.enter()
     code = p.read_block(CODE_WORDS)
+    p.enter()
+    second = p.read_block(CODE_WORDS)      # two passes, then majority-resolve diffs
+    diffs = [a for a in range(CODE_WORDS) if code[a] != second[a]]
+    for a in diffs:
+        reads = p.read_at(a) + [code[a], second[a]]
+        code[a] = max(set(reads), key=reads.count)
+    if diffs:
+        print(f"    note: {len(diffs)} word(s) differed between read passes; "
+              "resolved by majority re-read")
     p.load_config()
     cfg, cur = [], CFG_START
     for addr in range(CFG_START, CFG_END + 1):     # R does not increment
         for _ in range(addr - cur):
             p.inc()
-        cfg.append(p.read_word())
+        reads = [p.read_word() for _ in range(3)]
+        cfg.append(max(set(reads), key=reads.count))
         cur = addr
     with open(path, 'w') as f:
         f.write("addr  word\n")
@@ -201,6 +238,56 @@ def do_dump(p, path):
         for a, w in zip(range(CFG_START, CFG_END + 1), cfg):
             f.write(f"{a:04X}  {w:04X}\n")
     print(f"Dumped {len(code)} program words + {len(cfg)} config words to {path}")
+
+
+def resolve_mismatches(p, code, mism):
+    """Triage verify mismatches into in-transit read glitches vs real errors.
+
+    A word that reads correctly in a majority of fresh reads was corrupted in
+    transit; the chip itself is fine. Raises for words that are consistently
+    wrong (glitch during programming) or unstable (flaky connection). Returns
+    the list of glitch addresses.
+    """
+    def expect(a):
+        return code.get(a, BLANK)
+
+    glitches = []
+    if len(mism) > 64:                          # too many for word-by-word triage
+        p.enter()
+        second = p.read_block(CODE_WORDS)       # one more full pass
+        glitches += [a for a in mism if second[a] == expect(a)]
+        mism = [a for a in mism if second[a] != expect(a)]
+        if len(mism) > 64:
+            raise RuntimeError("bulk reads are too corrupted to verify - fix the "
+                               "wiring before trying again")
+
+    genuine, unstable = [], []
+    for a in mism:
+        reads = p.read_at(a)
+        if sum(v == expect(a) for v in reads) >= 2:
+            glitches.append(a)                  # majority correct: transit glitch
+        elif len(set(reads)) == 1:
+            genuine.append((a, reads[0]))
+        else:
+            unstable.append((a, reads))
+
+    if genuine:
+        if all(v == 0 for _, v in genuine):
+            print("    note: these words read back as 0x0000 - if this hex enables "
+                  "code protection (CP=0), program memory reads as zeros and "
+                  "verify cannot work by design")
+        shown = ', '.join(f"{a:#06x} {expect(a):04X}->{v:04X}" for a, v in genuine[:4])
+        more = f" (+{len(genuine) - 4} more)" if len(genuine) > 4 else ''
+        raise RuntimeError(f"Verify failed - {len(genuine)} word(s) read back "
+                           f"consistently wrong ({shown}{more}); the corruption "
+                           "happened while the chip was being programmed")
+    if unstable:
+        shown = ', '.join(f"{a:#06x}: {' '.join(format(v, '04X') for v in r)}"
+                          for a, r in unstable[:4])
+        raise RuntimeError(f"Verify failed - repeated reads of the same word keep "
+                           f"changing ({shown}); the connection is unstable - "
+                           "reseat all jumpers and shorten the PGC/PGD wiring")
+    return glitches
 
 
 def do_full(p, hexfile):
@@ -247,25 +334,35 @@ def do_full(p, hexfile):
     t0 = time.time()
     p.enter()
     words = p.read_block(CODE_WORDS)
-    for addr in range(CODE_START, CODE_END + 1):
-        expect = code.get(addr, BLANK)
-        if words[addr] != expect:
-            raise RuntimeError(f"Verify failed at {addr:#06x}: "
-                               f"wrote {expect:#06x}, read {words[addr]:#06x}")
+    mism = [a for a in range(CODE_START, CODE_END + 1)
+            if words[a] != code.get(a, BLANK)]
+    if mism and all(w == 0 for w in words):
+        raise RuntimeError("all 2048 words read back 0x0000 - either programming "
+                           "failed or this hex enables code protection (CP=0), "
+                           "which makes program memory unverifiable by design")
+    if mism:
+        glitches = resolve_mismatches(p, code, mism)
+        shown = ', '.join(f"{a:#06x}" for a in glitches[:8])
+        more = f" (+{len(glitches) - 8} more)" if len(glitches) > 8 else ''
+        print(f"    note: {len(glitches)} word(s) were corrupted in transit during "
+              f"the bulk read ({shown}{more}) but read back correctly - the chip "
+              "contents are good")
     if config:
         p.load_config()
         cur = CFG_START
         for addr in sorted(config):
             for _ in range(addr - cur):
                 p.inc()
-            got = p.read_word()
-            if (got & CONFIG_MASK) != (config[addr] & CONFIG_MASK):
+            reads = [p.read_word() for _ in range(3)]     # R does not increment
+            expect = config[addr] & CONFIG_MASK
+            good = [r for r in reads if (r & CONFIG_MASK) == expect]
+            if not good:
                 raise RuntimeError(f"Config verify failed at {addr:#06x}: "
-                                   f"wrote {config[addr]:#06x}, read {got:#06x}")
-            if got != config[addr]:
-                print(f"    note: {addr:#06x} reads {got:#06x} - unimplemented "
+                                   f"wrote {config[addr]:#06x}, read {reads[0]:#06x}")
+            if good[0] != config[addr]:
+                print(f"    note: {addr:#06x} reads {good[0]:#06x} - unimplemented "
                       f"bits read as 1s; implemented bits match (mask {CONFIG_MASK:#06x})")
-            cur = addr                 # R does not increment
+            cur = addr
     print(f"[5] Verify passed in {time.time() - t0:.1f}s")
 
     p.exit_prog()
