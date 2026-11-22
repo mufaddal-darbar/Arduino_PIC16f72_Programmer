@@ -1,0 +1,50 @@
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --set-target 970
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --set-target 1008
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --set-target 1000
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --set-target 980
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --set-target 866
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --set-target 900
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --set-target 875
+python picard_host.py --port COM11 --set-target 885
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --id
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --id
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --load-test 40
+python picard_host.py --port COM11 --load-test 300
+python picard_host.py --port COM11 --load-test 300 --hold 20
+python picard_host.py --port COM11 --boost-test
+python picard_host.py --port COM11 --load-test 300
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --boost
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --id
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --hold 20
+python picard_host.py --port COM11 --load-test 300
+python picard_host.py --port COM11 --hold 20
+python picard_host.py --port COM11 --hex bench_power_supply.hex
+python picard_host.py --port COM11 --dump dump.txt
+python picard_host.py --port COM11 --verify bench_power_supply.hex
+doskey
+doskey /history > picard_revised_programmer_cmds.txt
